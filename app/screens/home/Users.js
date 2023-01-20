@@ -70,7 +70,7 @@ export default function Users() {
         <AllUsers />
       </ScrollView>
 
-      <Navbar />
+      <Navbar type={"Users"} />
     </View>
   );
 }

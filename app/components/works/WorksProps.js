@@ -50,12 +50,13 @@ export default function WorksProps(props) {
 const styles = StyleSheet.create({
   topBox: {
     flex: 1,
-    height: (windowHeight * 18) / 100,
+    height: 165,
     borderRadius: 20,
     marginHorizontal: hp(3),
     marginVertical: hp(1.5),
     backgroundColor: "white",
     flexDirection: "row",
+    elevation: 7,
   },
   firstBox: {
     width: "40%",
@@ -95,6 +96,6 @@ const styles = StyleSheet.create({
   iconText: {
     fontSize: 15,
     color: "#232e56",
-    marginTop: hp(1),
+    marginTop: 5,
   },
 });

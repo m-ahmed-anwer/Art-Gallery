@@ -7,6 +7,7 @@ import { ActivityIndicator, View } from "react-native";
 
 export default function AppNav() {
   const { isLoading, userToken } = useContext(AuthContext);
+
   if (isLoading) {
     <View style={{ justifyContent: "center", alignItems: "center" }}>
       <ActivityIndicator size={"large"} color={"black"} />

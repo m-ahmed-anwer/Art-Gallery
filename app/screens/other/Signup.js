@@ -10,7 +10,7 @@ import {
   ScrollView,
   ActivityIndicator,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -27,7 +27,6 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [confirmpassword, setConfirmpassword] = useState("");
   const [passwordStatus, setPasswordStatus] = useState(true);
-  const [data, setData] = useState({});
   const [status, setStatus] = useState(false);
   const [validity, setValidity] = useState({
     name: false,
@@ -40,7 +39,7 @@ export default function Login() {
     "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$"
   );
 
-  signupUser = async (email, password, name) => {
+  signupUser = async (email, password, name, username) => {
     setLoading(true);
     await firebase
       .auth()
@@ -65,8 +64,9 @@ export default function Login() {
               .collection("users")
               .doc(firebase.auth().currentUser.uid)
               .set({
-                name,
-                email,
+                name: name,
+                email: email,
+                username: username,
               });
           })
           .catch((error) => {
@@ -103,7 +103,8 @@ export default function Login() {
       setStatus(true);
       return;
     }
-    signupUser(email, password, name);
+    const temp = email.split("@");
+    signupUser(email, password, name, temp[0]);
   };
 
   const height = Dimensions.get("screen").height;
@@ -153,7 +154,7 @@ export default function Login() {
               onChangeText={(value) => {
                 setName(value);
               }}
-              onEndEditing={() => {
+              onEndEditing={(value) => {
                 setValidity({ ...validity, name: true });
               }}
               value={name}

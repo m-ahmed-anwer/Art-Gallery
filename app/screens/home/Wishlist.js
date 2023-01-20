@@ -68,7 +68,7 @@ export default function Home() {
           <Works />
         </View>
       </ScrollView>
-      <Navbar />
+      <Navbar type={"Wishlist"} />
     </View>
   );
 }

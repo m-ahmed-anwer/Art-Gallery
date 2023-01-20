@@ -18,18 +18,24 @@ import { AuthContext } from "../../Navigation/AuthContext";
 
 export default function Settings() {
   const { signout } = useContext(AuthContext);
-  const username = "ahmedanwer";
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const navigation = useNavigation();
   const [enable, setEnable] = useState(false);
   const [notification, setNotification] = useState(false);
-  //firebase
-
-  const user = firebase.auth().currentUser;
-  if (user !== null) {
-    const name = user.name;
-    const email = user.email;
-    const uid = user.uid;
-  }
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid)
+      .get()
+      .then((user) => {
+        if (user.exists) {
+          setName(user.data().name);
+          setUsername(user.data().username);
+        }
+      });
+  }, []);
 
   return (
     <View style={styles.cont}>
@@ -49,8 +55,8 @@ export default function Settings() {
                 />
               </View>
               <View style={styles.names}>
-                <Text style={styles.name}>{user.email}</Text>
-                <Text style={styles.username}>@{username}</Text>
+                <Text style={styles.name}> {name}</Text>
+                <Text style={styles.username}>@ {username}</Text>
               </View>
             </View>
           </View>
@@ -198,7 +204,7 @@ export default function Settings() {
           </View>
         </View>
       </ScrollView>
-      <Navbar />
+      <Navbar type={"Settings"} />
     </View>
   );
 }

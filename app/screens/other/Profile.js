@@ -1,67 +1,102 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Icon from "react-native-vector-icons/Feather";
 import { useNavigation } from "@react-navigation/native";
+import firebase from "firebase/compat";
 
 export default function Profile() {
   const navigation = useNavigation();
-  const username = "ahmedanwer";
-  const name = "Ahmed Anwer";
-  const userId = "123Dse9";
-  const email = "ahmedanwer0094@gmail.com";
-  const contactNum = "0768242884";
+  const userId = firebase.auth().currentUser.uid;
+  const contactNum = "null";
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [val, setVal] = useState(false);
+
+  useEffect(() => {
+    setVal(true);
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid)
+      .get()
+      .then((user) => {
+        if (user.exists) {
+          setEmail(user.data().email);
+          setName(user.data().name);
+          setUsername(user.data().username);
+          setVal(false);
+        }
+      });
+  }, []);
 
   return (
-    <View style={styles.topBackgroung}>
-      <View style={styles.background}>
-        <View style={styles.more}>
-          <Icon
-            name="chevron-left"
-            style={styles.icon}
-            onPress={() => {
-              navigation.navigate("Settings");
-            }}
-          />
-        </View>
-
-        <View>
-          <View style={styles.profile}>
-            <Image
-              source={require("../../../assets/profile.jpeg")}
-              style={styles.img}
+    <View style={val && { justifyContent: "center", alignItems: "center" }}>
+      {val && (
+        <ActivityIndicator
+          size="large"
+          color="black"
+          style={{ marginTop: hp(10) }}
+        />
+      )}
+      <View style={[styles.topBackgroung, val && { display: "none" }]}>
+        <View style={styles.background}>
+          <View style={styles.more}>
+            <Icon
+              name="chevron-left"
+              style={styles.icon}
+              onPress={() => {
+                navigation.navigate("Settings");
+              }}
             />
-            <Text style={styles.name}>{name}</Text>
-            <Text style={styles.username}>@{username}</Text>
           </View>
 
-          <View style={styles.bottom}>
-            <View style={styles.direction}>
-              <Text style={styles.txt1}>User ID</Text>
-              <Text style={styles.txt2}>{userId}</Text>
+          <View>
+            <View style={styles.profile}>
+              <Image
+                source={require("../../../assets/profile.jpeg")}
+                style={styles.img}
+              />
+              <Text style={styles.name}>{name}</Text>
+              <Text style={styles.username}>@{username}</Text>
             </View>
-            <View style={styles.direction}>
-              <Text style={styles.txt1}>User Name</Text>
-              <Text style={styles.txt2}>{username}</Text>
+
+            <View style={styles.bottom}>
+              <View style={styles.direction}>
+                <Text style={styles.txt1}>User ID</Text>
+                <Text style={styles.txt2}>{userId}</Text>
+              </View>
+              <View style={styles.direction}>
+                <Text style={styles.txt1}>User Name</Text>
+                <Text style={styles.txt2}>{username}</Text>
+              </View>
+              <View style={styles.direction}>
+                <Text style={styles.txt1}>E-mail</Text>
+                <Text style={styles.txt2}>{email}</Text>
+              </View>
+              <View style={styles.direction}>
+                <Text style={styles.txt1}>Contact Number</Text>
+                <Text style={styles.txt2}>{contactNum}</Text>
+              </View>
             </View>
-            <View style={styles.direction}>
-              <Text style={styles.txt1}>E-mail</Text>
-              <Text style={styles.txt2}>{email}</Text>
-            </View>
-            <View style={styles.direction}>
-              <Text style={styles.txt1}>Contact Number</Text>
-              <Text style={styles.txt2}>{contactNum}</Text>
-            </View>
+            <Text
+              style={styles.editText}
+              onPress={() => {
+                navigation.navigate("EditProfile");
+              }}
+            >
+              Edit Profile{`  `}
+              <Icon name="edit" style={styles.edit} />
+            </Text>
           </View>
-          <Text
-            style={styles.editText}
-            onPress={() => {
-              navigation.navigate("EditProfile");
-            }}
-          >
-            Edit Profile{`  `}
-            <Icon name="edit" style={styles.edit} />
-          </Text>
         </View>
       </View>
     </View>

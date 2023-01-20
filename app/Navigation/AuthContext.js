@@ -8,7 +8,6 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userToken, setUserToken] = useState(null);
-  const [userInfo, setUserInfo] = useState(null);
 
   const login = (email, password) => {
     setIsLoading(true);
@@ -19,12 +18,7 @@ export const AuthProvider = ({ children }) => {
         alert(error.message);
       })
       .then(() => {
-        setUserInfo(firebase.auth().currentUser);
         setUserToken(firebase.auth().currentUser.uid);
-        AsyncStorage.setItem(
-          "userInfo",
-          JSON.stringify(firebase.auth().currentUser)
-        );
         AsyncStorage.setItem("userToken", firebase.auth().currentUser.uid);
       });
     setIsLoading(false);
@@ -32,7 +26,6 @@ export const AuthProvider = ({ children }) => {
   const signout = () => {
     setIsLoading(true);
     setUserToken(null);
-    AsyncStorage.removeItem("userInfo");
     AsyncStorage.removeItem("userToken");
     setIsLoading(false);
   };
@@ -40,13 +33,8 @@ export const AuthProvider = ({ children }) => {
   const isLoggedIn = async () => {
     try {
       setIsLoading(true);
-      let userInfo = AsyncStorage.getItem("userInfo");
       let userToken = AsyncStorage.getItem("userToken");
-      userInfo = JSON.parse(userInfo);
-      if (userInfo) {
-        setUserToken(userToken);
-        setUserInfo(userInfo);
-      }
+      setUserToken(userToken);
       setIsLoading(false);
     } catch (e) {
       alert(e);
@@ -54,11 +42,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider
-      value={{ login, signout, isLoading, userToken, userInfo }}
-    >
+    <AuthContext.Provider value={{ login, signout, isLoading, userToken }}>
       {children}
-      <Text></Text>
     </AuthContext.Provider>
   );
 };

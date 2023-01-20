@@ -22,7 +22,10 @@ export default function Home() {
   const [refreshing, setRefreshing] = React.useState(false);
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    wait(1500).then(() => setRefreshing(false));
+    wait(1500).then(() => {
+      setRefreshing(false);
+      setType("All");
+    });
   }, []);
   const [searchStatus, SetSearchStatus] = useState(false);
 
@@ -72,7 +75,7 @@ export default function Home() {
 
         <Works type={type} />
       </ScrollView>
-      <Navbar />
+      <Navbar type={"Home"} />
     </View>
   );
 }

@@ -54,7 +54,7 @@ export default function Category(props) {
 
 const styles = StyleSheet.create({
   top: {
-    height: hp(19),
+    height: "13.5%",
   },
   container: {
     width: 130,
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     shadowColor: "black",
     shadowOffset: { width: 2, height: 2 },
     shadowRadius: 5,
-    elevation: 30,
+    elevation: 7,
     shadowOpacity: 0.3,
   },
   title: {

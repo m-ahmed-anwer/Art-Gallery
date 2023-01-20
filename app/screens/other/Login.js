@@ -33,6 +33,7 @@ export default function Login() {
   const [status, setStatus] = useState(false);
   const [validity, setValidity] = useState({ email: false, password: false });
   const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const strongRegex = new RegExp(
     "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$"
@@ -73,6 +74,7 @@ export default function Login() {
           if (firebase.auth().currentUser) {
             if (firebase.auth().currentUser.emailVerified) {
               setLoading(false);
+              setIsLoading(true);
               login(email, password);
               //navigation.navigate("Home");
             } else {
@@ -96,12 +98,26 @@ export default function Login() {
 
   return (
     <>
+      <View
+        style={
+          isLoading
+            ? {
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "#f1f1f1",
+              }
+            : { display: "none" }
+        }
+      >
+        <ActivityIndicator  size={"large"} color={"black"} />
+      </View>
       <ScrollView
         contentContainerStyle={{ flexGrow: 1, height: height }}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
         bounces={false}
-        style={loading && { opacity: 0.5 }}
+        style={[loading && { opacity: 0.5 }, isLoading && { display: "none" }]}
       >
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
