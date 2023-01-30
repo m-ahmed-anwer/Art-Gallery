@@ -85,7 +85,7 @@ export default function AddPost() {
               )}
             </TouchableOpacity>
           </View>
-          <Inputs />
+          <Inputs image="assets/icon.png" />
         </View>
       </ScrollView>
     </View>

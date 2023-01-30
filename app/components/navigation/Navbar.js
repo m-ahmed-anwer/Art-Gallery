@@ -48,27 +48,28 @@ function Navbar(props) {
         </TouchableOpacity>
         <Text style={styles.text}>Home</Text>
       </View>
+
       <View style={styles.container}>
         <TouchableOpacity
-          style={[styles.feather, props.type === "Users" && change]}
+          style={[styles.feather, props.type === "Wishlist" && change]}
           onPress={() => {
-            navigation.navigate("Users");
+            navigation.navigate("Wishlist");
           }}
         >
           <View style={styles.textView}>
             <Icon
-              name="mail"
+              name="bookmark"
               style={[
                 styles.icon,
-                props.type == "Users" && { color: "#f1f1f1" },
+                props.type == "Wishlist" && { color: "#f1f1f1" },
               ]}
             />
           </View>
         </TouchableOpacity>
-        <Text style={styles.text}>Messages</Text>
+        <Text style={[styles.text]}>Wishlist</Text>
       </View>
 
-      <View style={[styles.container, { marginHorizontal: hp(0.4) }]}>
+      <View style={[styles.container, { marginHorizontal: hp(0.2) }]}>
         <TouchableOpacity
           style={[
             styles.feather,
@@ -94,22 +95,22 @@ function Navbar(props) {
 
       <View style={styles.container}>
         <TouchableOpacity
-          style={[styles.feather, props.type === "Wishlist" && change]}
+          style={[styles.feather, props.type === "Users" && change]}
           onPress={() => {
-            navigation.navigate("Wishlist");
+            navigation.navigate("Users");
           }}
         >
           <View style={styles.textView}>
             <Icon
-              name="bookmark"
+              name="mail"
               style={[
                 styles.icon,
-                props.type == "Wishlist" && { color: "#f1f1f1" },
+                props.type == "Users" && { color: "#f1f1f1" },
               ]}
             />
           </View>
         </TouchableOpacity>
-        <Text style={[styles.text]}>Wishlist</Text>
+        <Text style={styles.text}>Messages</Text>
       </View>
 
       <View style={styles.container}>

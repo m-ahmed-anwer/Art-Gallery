@@ -9,7 +9,7 @@ import {
   StatusBar,
   ScrollView,
   Dimensions,
-  Alert,
+  Image,
   ActivityIndicator,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
@@ -105,12 +105,22 @@ export default function Login() {
                 flex: 1,
                 justifyContent: "center",
                 alignItems: "center",
-                backgroundColor: "#f1f1f1",
+                backgroundColor: "white",
               }
             : { display: "none" }
         }
       >
-        <ActivityIndicator  size={"large"} color={"black"} />
+        <ActivityIndicator size={"large"} color="black" />
+        <Text
+          style={{
+            fontSize: 20,
+            color: "#141E87",
+            fontFamily: "Futura",
+            marginTop: hp(5),
+          }}
+        >
+          Loading
+        </Text>
       </View>
       <ScrollView
         contentContainerStyle={{ flexGrow: 1, height: height }}

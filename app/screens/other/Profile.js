@@ -39,14 +39,10 @@ export default function Profile() {
   }, []);
 
   return (
-    <View style={val && { justifyContent: "center", alignItems: "center" }}>
-      {val && (
-        <ActivityIndicator
-          size="large"
-          color="black"
-          style={{ marginTop: hp(10) }}
-        />
-      )}
+    <View
+      style={val && { flex: 1, justifyContent: "center", alignItems: "center" }}
+    >
+      {val && <ActivityIndicator size="large" color="black" />}
       <View style={[styles.topBackgroung, val && { display: "none" }]}>
         <View style={styles.background}>
           <View style={styles.more}>

@@ -16,7 +16,7 @@ export default function Category(props) {
   const setType = props.setType;
 
   return (
-    <View style={styles.top}>
+    <View>
       <FlatList
         data={data}
         renderItem={({ item, index }) => {
@@ -53,9 +53,6 @@ export default function Category(props) {
 }
 
 const styles = StyleSheet.create({
-  top: {
-    height: "13.5%",
-  },
   container: {
     width: 130,
     height: 130,

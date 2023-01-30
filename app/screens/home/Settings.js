@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 import Navbar from "../../components/navigation/Navbar";
@@ -16,14 +17,17 @@ import { Switch } from "react-native-elements";
 import { firebase } from "../../Firebase/Firebase";
 import { AuthContext } from "../../Navigation/AuthContext";
 
-export default function Settings() {
+function Settings() {
   const { signout } = useContext(AuthContext);
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const navigation = useNavigation();
   const [enable, setEnable] = useState(false);
   const [notification, setNotification] = useState(false);
+  const [load, setLoad] = useState(false);
+
   useEffect(() => {
+    setLoad(true);
     firebase
       .firestore()
       .collection("users")
@@ -33,181 +37,201 @@ export default function Settings() {
         if (user.exists) {
           setName(user.data().name);
           setUsername(user.data().username);
+          setLoad(false);
         }
       });
   }, []);
 
   return (
-    <View style={styles.cont}>
-      <ScrollView
-        style={styles.scroll}
-        vertical
-        showsVerticalScrollIndicator={false}
-        bounces={false}
+    <>
+      <View
+        style={
+          load
+            ? {
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "white",
+              }
+            : { display: "none" }
+        }
       >
-        <View style={{ alignItems: "center" }}>
-          <View style={{ width: "100%", alignItems: "center" }}>
-            <View style={styles.container}>
-              <View style={{ justifyContent: "center" }}>
-                <Image
-                  source={require("../../../assets/profile.jpeg")}
-                  style={styles.img}
-                />
-              </View>
-              <View style={styles.names}>
-                <Text style={styles.name}> {name}</Text>
-                <Text style={styles.username}>@ {username}</Text>
-              </View>
-            </View>
-          </View>
+        <ActivityIndicator size={"large"} color="black" />
+      </View>
 
-          <View style={{ width: "100%" }}>
-            <Text style={styles.top}>Account</Text>
-            <View style={{ alignItems: "center" }}>
-              <View style={styles.container2}>
-                <TouchableOpacity
-                  style={styles.box}
-                  onPress={() => navigation.navigate("Profile")}
-                >
-                  <View style={styles.boxInner}>
-                    <Icon name="user" style={styles.iconInner} />
-                    <Text style={styles.text}>Profile</Text>
-                  </View>
-                  <Icon name="chevron-right" style={styles.icon} />
-                </TouchableOpacity>
-                <View style={styles.border} />
-                <View style={styles.box}>
-                  <View style={styles.boxInner}>
-                    {notification ? (
-                      <Icon name="bell" style={styles.iconInner} />
-                    ) : (
-                      <Icon name="bell-off" style={styles.iconInner} />
-                    )}
-
-                    <Text style={styles.text}>Notification</Text>
-                  </View>
-
-                  <Switch
-                    value={notification}
-                    trackColor={{ false: "#767577", true: "#404070" }}
-                    onValueChange={() => setNotification(!notification)}
+      <View style={[styles.cont, load && { display: "none" }]}>
+        <ScrollView
+          style={styles.scroll}
+          vertical
+          showsVerticalScrollIndicator={false}
+          bounces={false}
+        >
+          <View style={{ alignItems: "center" }}>
+            <View style={{ width: "100%", alignItems: "center" }}>
+              <View style={styles.container}>
+                <View style={{ justifyContent: "center" }}>
+                  <Image
+                    source={require("../../../assets/profile.jpeg")}
+                    style={styles.img}
                   />
                 </View>
-                <View style={styles.border} />
-                <TouchableOpacity style={styles.box}>
-                  <View style={styles.boxInner}>
-                    <Icon name="globe" style={styles.iconInner} />
-                    <Text style={styles.text}>Language</Text>
-                  </View>
-                  <Text style={{ fontSize: 15, color: "grey" }}>English</Text>
-                </TouchableOpacity>
+                <View style={styles.names}>
+                  <Text style={styles.name}> {name}</Text>
+                  <Text style={styles.username}>@ {username}</Text>
+                </View>
               </View>
             </View>
-          </View>
 
-          <View style={{ width: "100%" }}>
-            <Text style={styles.top}>Security</Text>
-            <View style={{ alignItems: "center" }}>
-              <View style={styles.container2}>
-                <View style={styles.box}>
-                  <View style={styles.boxInner}>
-                    {enable ? (
-                      <Icon name="lock" style={styles.iconInner} />
-                    ) : (
-                      <Icon name="unlock" style={styles.iconInner} />
-                    )}
-                    <Text style={styles.text}>Face ID</Text>
+            <View style={{ width: "100%" }}>
+              <Text style={styles.top}>Account</Text>
+              <View style={{ alignItems: "center" }}>
+                <View style={styles.container2}>
+                  <TouchableOpacity
+                    style={styles.box}
+                    onPress={() => navigation.navigate("Profile")}
+                  >
+                    <View style={styles.boxInner}>
+                      <Icon name="user" style={styles.iconInner} />
+                      <Text style={styles.text}>Profile</Text>
+                    </View>
+                    <Icon name="chevron-right" style={styles.icon} />
+                  </TouchableOpacity>
+                  <View style={styles.border} />
+                  <View style={styles.box}>
+                    <View style={styles.boxInner}>
+                      {notification ? (
+                        <Icon name="bell" style={styles.iconInner} />
+                      ) : (
+                        <Icon name="bell-off" style={styles.iconInner} />
+                      )}
+
+                      <Text style={styles.text}>Notification</Text>
+                    </View>
+
+                    <Switch
+                      value={notification}
+                      trackColor={{ false: "#767577", true: "#404070" }}
+                      onValueChange={() => setNotification(!notification)}
+                    />
                   </View>
-                  <Switch
-                    value={enable}
-                    trackColor={{ false: "#767577", true: "#404070" }}
-                    onValueChange={() => {
+                  <View style={styles.border} />
+                  <TouchableOpacity style={styles.box}>
+                    <View style={styles.boxInner}>
+                      <Icon name="globe" style={styles.iconInner} />
+                      <Text style={styles.text}>Language</Text>
+                    </View>
+                    <Text style={{ fontSize: 15, color: "grey" }}>English</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+
+            <View style={{ width: "100%" }}>
+              <Text style={styles.top}>Security</Text>
+              <View style={{ alignItems: "center" }}>
+                <View style={styles.container2}>
+                  <View style={styles.box}>
+                    <View style={styles.boxInner}>
+                      {enable ? (
+                        <Icon name="lock" style={styles.iconInner} />
+                      ) : (
+                        <Icon name="unlock" style={styles.iconInner} />
+                      )}
+                      <Text style={styles.text}>Face ID</Text>
+                    </View>
+                    <Switch
+                      value={enable}
+                      trackColor={{ false: "#767577", true: "#404070" }}
+                      onValueChange={() => {
+                        Alert.alert(
+                          `Do you want to ${
+                            enable ? `Deactivate` : `Activate`
+                          } Face ID`,
+                          "",
+                          [
+                            { text: "Cancel", style: "cancel" },
+                            {
+                              text: "Yes",
+                              style: "destructive",
+                              onPress: () => setEnable(!enable),
+                            },
+                          ]
+                        );
+                      }}
+                    />
+                  </View>
+                </View>
+              </View>
+            </View>
+
+            <View style={{ width: "100%" }}>
+              <Text style={styles.top}>About</Text>
+              <View style={{ alignItems: "center" }}>
+                <View style={styles.container2}>
+                  <View style={styles.box}>
+                    <View style={styles.boxInner}>
+                      <Icon name="alert-circle" style={styles.iconInner} />
+                      <Text style={styles.text}>Version</Text>
+                    </View>
+                    <Text style={{ fontSize: 15, color: "grey" }}>2.1.3</Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+
+            <View style={{ width: "100%" }}>
+              <Text style={styles.top}>Authentication</Text>
+              <View style={{ alignItems: "center" }}>
+                <View style={styles.container2}>
+                  <TouchableOpacity
+                    style={styles.box}
+                    onPress={() => {
                       Alert.alert(
-                        `Do you want to ${
-                          enable ? `Deactivate` : `Activate`
-                        } Face ID`,
-                        "",
+                        "Alert !",
+                        "Are you sure you want to log out?",
                         [
-                          { text: "Cancel", style: "cancel" },
                           {
-                            text: "Yes",
+                            text: "Cancel",
+                            style: "cancel",
+                          },
+                          {
+                            text: "Log Out",
                             style: "destructive",
-                            onPress: () => setEnable(!enable),
+                            onPress: () => {
+                              firebase
+                                .auth()
+                                .signOut()
+                                .then(() => {
+                                  signout();
+                                  //navigation.navigate("Start");
+                                })
+                                .catch((error) => {
+                                  console.log(`Error signing out: ${error}`);
+                                });
+                            },
                           },
                         ]
                       );
                     }}
-                  />
+                  >
+                    <Text style={[styles.text, { color: "red" }]}>Log Out</Text>
+                    <Icon
+                      name="log-out"
+                      style={[styles.iconInner, { color: "red" }]}
+                    />
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
           </View>
-
-          <View style={{ width: "100%" }}>
-            <Text style={styles.top}>About</Text>
-            <View style={{ alignItems: "center" }}>
-              <View style={styles.container2}>
-                <View style={styles.box}>
-                  <View style={styles.boxInner}>
-                    <Icon name="alert-circle" style={styles.iconInner} />
-                    <Text style={styles.text}>Version</Text>
-                  </View>
-                  <Text style={{ fontSize: 15, color: "grey" }}>2.1.3</Text>
-                </View>
-              </View>
-            </View>
-          </View>
-
-          <View style={{ width: "100%" }}>
-            <Text style={styles.top}>Authentication</Text>
-            <View style={{ alignItems: "center" }}>
-              <View style={styles.container2}>
-                <TouchableOpacity
-                  style={styles.box}
-                  onPress={() => {
-                    Alert.alert(
-                      "Alert !",
-                      "Are you sure you want to log out?",
-                      [
-                        {
-                          text: "Cancel",
-                          style: "cancel",
-                        },
-                        {
-                          text: "Log Out",
-                          style: "destructive",
-                          onPress: () => {
-                            firebase
-                              .auth()
-                              .signOut()
-                              .then(() => {
-                                signout();
-                                //navigation.navigate("Start");
-                              })
-                              .catch((error) => {
-                                console.log(`Error signing out: ${error}`);
-                              });
-                          },
-                        },
-                      ]
-                    );
-                  }}
-                >
-                  <Text style={[styles.text, { color: "red" }]}>Log Out</Text>
-                  <Icon
-                    name="log-out"
-                    style={[styles.iconInner, { color: "red" }]}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </View>
-      </ScrollView>
-      <Navbar type={"Settings"} />
-    </View>
+        </ScrollView>
+        <Navbar type={"Settings"} />
+      </View>
+    </>
   );
 }
+export default Settings;
+
 const styles = StyleSheet.create({
   cont: {
     flex: 1,

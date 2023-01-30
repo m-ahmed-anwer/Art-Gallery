@@ -5,13 +5,14 @@ import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { Picker } from "@react-native-picker/picker";
 import Arts from "../../data/Arts";
 import { useNavigation } from "@react-navigation/native";
+import { firebase } from "../../Firebase/Firebase";
 
-export default function Inputs() {
+export default function Inputs(props) {
   const navigation = useNavigation();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("typography");
-  const [finalData, setFinalData] = useState({});
+  const image = props.image;
   const value =
     title === ""
       ? description === ""
@@ -24,6 +25,33 @@ export default function Inputs() {
   const data = Arts.map((item) => {
     return <Picker.Item label={item.name} value={item.type} />;
   });
+
+  const Datasubmit = () => {
+    const data = {
+      timestamp: firebase.database.ServerValue.TIMESTAMP,
+      userid: firebase.auth().currentUser.uid,
+      title,
+      description,
+      category,
+      image,
+    };
+    firebase
+      .database()
+      .ref("/post")
+      .push(data)
+      .catch((error) => {
+        alert(error.message);
+      })
+      .then(() => {
+        Alert.alert("Notice", "Successfully your art has been published");
+        navigation.navigate("Home");
+      });
+
+    setTitle("");
+    setDescription("");
+    setCategory("typography");
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.box}>
@@ -63,8 +91,8 @@ export default function Inputs() {
           placeholder={"Enter description"}
           placeholderTextColor="#7e7e7e"
           keyboardType="default"
-          autoCapitalize={true}
-          autoCorrect={true}
+          autoCapitalize="sentences"
+          autoCorrect={false}
           multiline={true}
           numberOfLines={4}
           style={[styles.input, { height: hp(10) }]}
@@ -81,20 +109,7 @@ export default function Inputs() {
                 text: "Yes",
                 style: "destructive",
                 onPress: () => {
-                  setFinalData({
-                    title: title,
-                    description: description,
-                    category: category,
-                  });
-                  setTitle("");
-                  setDescription("");
-                  setCategory("typography");
-                  console.log(finalData);
-                  Alert.alert(
-                    "Notice",
-                    "Successfully your art has been published"
-                  );
-                  navigation.navigate("Home");
+                  Datasubmit();
                 },
               },
             ]);

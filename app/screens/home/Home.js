@@ -32,51 +32,53 @@ export default function Home() {
   const [type, setType] = useState("All");
 
   return (
-    <View style={styles.container}>
-      <StatusBar style="dark" />
+    
+      <View style={styles.container}>
+        <StatusBar style="dark" />
 
-      <View style={styles.top}>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            paddingTop: hp(6),
-            marginHorizontal: hp(4),
-          }}
-        >
-          <Text style={styles.topText}>Art Gallery</Text>
-          {searchStatus ? (
-            <Icon
-              name="x"
-              style={styles.icon}
-              onPress={() => SetSearchStatus(!searchStatus)}
-            />
-          ) : (
-            <Icon
-              name="search"
-              style={styles.icon}
-              onPress={() => SetSearchStatus(!searchStatus)}
-            />
-          )}
+        <View style={styles.top}>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              paddingTop: hp(6),
+              marginHorizontal: hp(4),
+            }}
+          >
+            <Text style={styles.topText}>Art Gallery</Text>
+            {searchStatus ? (
+              <Icon
+                name="x"
+                style={styles.icon}
+                onPress={() => SetSearchStatus(!searchStatus)}
+              />
+            ) : (
+              <Icon
+                name="search"
+                style={styles.icon}
+                onPress={() => SetSearchStatus(!searchStatus)}
+              />
+            )}
+          </View>
+          {searchStatus && <SearchBar placeholder="Search.." />}
         </View>
-        {searchStatus && <SearchBar placeholder="Search.." />}
+
+        <ScrollView
+          style={styles.bend}
+          vertical
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          <Text style={styles.txt}>Categories</Text>
+          <Category type={type} setType={setType} />
+
+          <Works type={type} />
+        </ScrollView>
+        <Navbar type={"Home"} />
       </View>
-
-      <ScrollView
-        style={styles.bend}
-        vertical
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        <Text style={styles.txt}>Categories</Text>
-        <Category type={type} setType={setType} />
-
-        <Works type={type} />
-      </ScrollView>
-      <Navbar type={"Home"} />
-    </View>
+    
   );
 }
 const styles = StyleSheet.create({

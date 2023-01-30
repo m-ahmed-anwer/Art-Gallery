@@ -10,20 +10,36 @@ import {
   Dimensions,
 } from "react-native";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/Feather";
+import { firebase } from "../../Firebase/Firebase";
 
 export default function EditProfile() {
   const navigation = useNavigation();
-  const [name, setName] = useState("Ahmed Anwer");
-  const [username, setUsername] = useState("ahmedanwer");
-  const userId = "123Dse9";
-  const [email, setEmail] = useState("ahmedanwer0094@gmail.com");
+  const userId = firebase.auth().currentUser.uid;
   const [contactNum, setContactNum] = useState("0768242884");
   const [status, setStatus] = useState(false);
-  const [data, setData] = useState({});
   const height = Dimensions.get("screen").height;
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid)
+      .get()
+      .then((user) => {
+        if (user.exists) {
+          setEmail(user.daa().email);
+          setName(user.data().name);
+          setUsername(user.data().username);
+        }
+      });
+  }, []);
 
   return (
     <ScrollView
@@ -77,7 +93,6 @@ export default function EditProfile() {
                   text: "Yes",
                   style: "destructive",
                   onPress: () => {
-                    setData(name, username, email, contactNum);
                     return navigation.navigate("Profile");
                   },
                 },
@@ -170,7 +185,6 @@ export default function EditProfile() {
                     text: "Yes",
                     style: "destructive",
                     onPress: () => {
-                      setData(name, username, email, contactNum);
                       return navigation.navigate("Profile");
                     },
                   },
